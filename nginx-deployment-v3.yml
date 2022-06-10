@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: nginx-deployment
 spec:
-  replicas: 3
+  replicas: 6
   selector:
     matchLabels:
       app: nginx
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: michalmon/lab13b:nginx-old
+          image: michalmon/lab13b:nginx-new
           ports:
             - containerPort: 3000
