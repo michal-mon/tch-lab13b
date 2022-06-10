@@ -6,6 +6,30 @@ Ponadto zostały przygotowane 4 pliki <b>nginx-deployment-v1/v2/v3/v4.yml</b>, k
 <ul>
   <li><b>nginx-deployment-v1.yml</b> - wdrożenie usługi, liczba replik: 3, obraz: nginx-old</li>
   <li><b>nginx-deployment-v2.yml</b> - zwiększenie liczby replik, liczba replik: 6, obraz: nginx-old</li>
-  <li><b>nginx-deployment-v3.yml</b> - zmiana obrazu na nginx-new, liczba replik: 6, obraz: nginx-new </li>
+  <li><b>nginx-deployment-v3.yml</b> - zmiana obrazu na <b>nginx-new</b>, liczba replik: 6, obraz: nginx-new </li>
   <li><b>nginx-deployment-v4.yml</b> - ustawienie limitów zasobów, liczba replik: 6, obraz: nginx-new</li>
 </ul>
+<h3>Test działania zbudowanych obrazów:</h3>
+<img src="nginx-old"/>
+<img src="nginx-new"/>
+<h3>Wykonanie zadania:</h3>
+<ol>
+  <li>
+    Wdrożenie usługi z użyciem polecenia <b>kubectl apply -f nginx-deployment-v1.yml</b> oraz wykonanie polecenia
+    <b>kubectl get rs -o wide</b> w celu sprawdzenia poprawności wdrożenia usługi.<br/>
+    <img src="1.png"/>
+  </li>
+  <li>
+    Wdrożenie kolejnej wersji usługi i zwiększenie liczby replik do 6. Po wykonaniu polecenia <b>kubectl get rs -o wide</b> można zauważyć, że poprzednie Pody nie zostały zabite, zwiększyła się jedynie liczba replik już istniejącego Poda. <br/>
+    <img src="2.png"/>
+  </li>
+  <li>
+    Wdrożenie kolejnej wersji usługi, obraz <b>nginx-old</b> został zamieniony na <b>nginx-new</b>, co spowodowało zabicie
+    poprzednich Podów i stworzenie nowej wersji ReplicaSet, co można zaobserwować po wykonaniu polecenia <b>kubectl get rs -o wide</b><br/>
+    <img src="3.png"/>
+  </li>
+  <li>
+    Wdrożenie finalnej wersji usługi oraz ustawienie limitów zasobów. Po wykonaniu polecenia <b>kubectl get rs -o wide</b>  widać, że ponownie spowodowało to zabicie poprzednich Podów i stworzenie nowej wersji ReplicaSet, tym razem jednak z limitami CPU oraz MEMORY.<br/><img src="4.png">
+  </li>
+  <li>Wykonanie rollback (downgrade) z powrotem do pierwszej wersji usługi z użyciem polecenia <b>kubectl rollout undo deployment nginx-deployment --to-revision=1</b>. Spowodowało to zabicie Podów pracujących na bazie obrazu <b>nginx-new</b> oraz odtworzenie tych, które pracowały na bazie obrazu <b>nginx-old</b><br/><img src="5.png"></li>
+</ol>
