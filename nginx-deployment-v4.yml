@@ -6,17 +6,17 @@ spec:
   replicas: 6
   selector:
     matchLabels:
-      app: nginx
+      app: lab13-nginx
   template:
     metadata:
       labels:
-        app: nginx
+        app: lab13-nginx
     spec:
       containers:
-        - name: nginx
-          image: michalmon/lab13b:nginx-old
+        - name: lab13-nginx
+          image: michalmon/lab13b:nginx-new
           ports:
-            - containerPort: 3000
+            - containerPort: 80
           resources:
             requests:
               memory: "20Mi"
